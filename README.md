@@ -1,3 +1,5 @@
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: uma senha é necessária
 👨‍💻 Vaga para apaixonados por criação de software
 ===========================================
 
@@ -218,6 +220,113 @@ Além dos requisitos básicos do teste, a inclusão dos seguintes diferenciais p
 
 A inclusão destes diferenciais demonstrará uma compreensão mais avançada e a aplicação de tecnologias modernas e práticas de desenvolvimento de software, elevando a qualidade e a experiência do usuário final.
 
+# Kanban Board Application
+
+A modern Kanban board implementation using Angular for the frontend and NestJS for the backend.
+
+## Project Structure
+
+The project is organized into two main directories:
+
+- `frontend/`: Angular application
+- `backend/`: NestJS application
+
+## Features
+
+- Create, update, and delete Kanban columns
+- Create, update, and delete cards within columns
+- Drag and drop cards between columns
+- Basic authentication and authorization
+- Real-time updates using WebSocket
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+- Angular CLI
+- NestJS CLI
+
+## Getting Started
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run start:dev
+   ```
+
+The backend server will be running on `http://localhost:3000`
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   ng serve
+   ```
+
+The application will be available at `http://localhost:4200`
+
+## Testing
+
+### Backend Tests
+
+```bash
+cd backend
+npm run test        # Unit tests
+npm run test:e2e    # E2E tests
+```
+
+### Frontend Tests
+
+```bash
+cd frontend
+ng test             # Unit tests
+ng e2e              # E2E tests
+```
+
+## API Documentation
+
+The API documentation is available at `http://localhost:3000/api` when running the backend server.
+
+## Security Measures
+
+- JWT-based authentication
+- Input validation and sanitization
+- CORS protection
+- Rate limiting
+- Helmet security headers
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 Dúvidas?
 ----------
