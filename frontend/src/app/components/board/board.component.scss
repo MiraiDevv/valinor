@@ -1,0 +1,85 @@
+/* src/app/components/board/board.component.scss */
+
+/* Customize the default drag preview */
+.cdk-drag-preview {
+  /* Make the preview semi-transparent */
+  @apply opacity-75;
+
+  /* Add a subtle border to highlight edges */
+  @apply border-2 border-blue-500;
+
+  /* Add a slight shadow for depth */
+  @apply shadow-lg;
+
+  /* Rounded corners for aesthetics */
+  @apply rounded-lg;
+
+  /* Ensure smooth transitions */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  /* Add gradient borders for acrylic effect */
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+
+  /* Edge indicators */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Change cursor during drag */
+.cdk-drag-preview:hover {
+  @apply cursor-grabbing;
+}
+
+/* Customize Placeholder (if needed) */
+.cdk-drag-placeholder {
+  @apply opacity-0;
+}
+
+/* Spinner styles */
+.loader {
+  border-width: 8px;
+  border-style: solid;
+  border-color: #e5e7eb transparent transparent transparent; /* Tailwind gray-200 and transparent */
+  border-top-color: #3b82f6; /* Tailwind blue-500 */
+  border-radius: 9999px;
+  width: 4rem;
+  height: 4rem;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Customize scrollbar for better aesthetics (optional) */
+.cards-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cards-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cards-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+/* Remove any residual Angular Material styles */
+.mat-card-header,
+.mat-card-content {
+  /* Reset or remove styles */
+}
+
+/* Highlight the dragged card */
+.cdk-drag-preview {
+  @apply border-blue-500 shadow-xl;
+}
+
+/* Optional: Scale the dragged card slightly */
+.cdk-drag-preview {
+  transform: scale(1.03);
+}
