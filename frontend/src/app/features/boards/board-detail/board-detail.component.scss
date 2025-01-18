@@ -1,0 +1,108 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: theme('colors.gray.100');
+  @apply dark:bg-gray-900;
+}
+
+.board-container {
+  @apply p-6 h-full overflow-auto;
+}
+
+.board-header {
+  @apply flex justify-between items-start mb-6;
+  .board-title {
+    @apply text-2xl font-bold text-gray-900 dark:text-white;
+  }
+  .board-description {
+    @apply mt-1 text-sm text-gray-500 dark:text-gray-400;
+  }
+}
+
+.columns-container {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+}
+
+.column {
+  @apply bg-gray-100 dark:bg-gray-800 rounded-lg min-w-[300px];
+  
+  .column-content {
+    @apply p-4;
+  }
+
+  .column-header {
+    @apply flex justify-between items-center mb-4 pb-2 border-b border-gray-200 dark:border-gray-700;
+    
+    .column-title {
+      @apply text-lg font-semibold text-gray-900 dark:text-white;
+    }
+  }
+}
+
+.cards-container {
+  @apply space-y-3 min-h-[50px];
+}
+
+.card {
+  @apply bg-white dark:bg-gray-700 rounded-md shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer;
+  
+  .card-content {
+    @apply p-3 relative;
+    
+    .card-title {
+      @apply text-base font-medium text-gray-900 dark:text-white mb-2 pr-16;
+    }
+    
+    .card-description {
+      @apply text-sm text-gray-500 dark:text-gray-400;
+    }
+    
+    .card-actions {
+      @apply absolute top-2 right-2 flex items-center space-x-1 opacity-0 transition-opacity duration-200;
+    }
+    
+    &:hover .card-actions {
+      @apply opacity-100;
+    }
+  }
+}
+
+.add-card-button {
+  @apply w-full mt-3 flex items-center justify-center px-3 py-2 text-sm text-gray-600 dark:text-gray-400 
+         hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600 
+         rounded-md transition-colors duration-200;
+  
+  svg {
+    @apply mr-2;
+  }
+}
+
+.primary-button {
+  @apply inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-md 
+         hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+}
+
+.icon-button {
+  @apply p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200;
+}
+
+.button-group {
+  @apply flex items-center space-x-3;
+}
+
+.loading-spinner {
+  @apply flex justify-center items-center h-full;
+  .spinner {
+    @apply w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin;
+  }
+}
+
+.error-message {
+  @apply flex flex-col items-center justify-center h-full space-y-4 text-center;
+  .message {
+    @apply text-lg text-destructive;
+  }
+  .retry-button {
+    @apply px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+  }
+} 
