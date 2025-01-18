@@ -1,78 +1,74 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, finalize } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../services/auth.service';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  private isRefreshing = false;
+export const AuthInterceptor: HttpInterceptorFn = (
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn
+) => {
+  const router = inject(Router);
+  const authService = inject(AuthService);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Skip auth header for auth endpoints
-    if (this.isAuthEndpoint(request.url)) {
-      console.log('Skipping auth header for auth endpoint:', request.url);
-      return next.handle(request);
-    }
-
-    const token = localStorage.getItem('token'); // Get token directly from localStorage
-    console.log('Current token:', token); // Debug log
-
-    if (!token) {
-      console.log('No token found, redirecting to login'); // Debug log
-      this.router.navigate(['/auth/login']);
-      return throwError(() => new Error('No authentication token'));
-    }
-
-    // Clone request with auth header
-    const authReq = request.clone({
-      headers: request.headers.set('Authorization', `Bearer ${token}`),
-      withCredentials: true
-    });
-    
-    // Debug logs
-    console.log('Request headers:', {
-      Authorization: authReq.headers.get('Authorization'),
-      'Content-Type': authReq.headers.get('Content-Type'),
-      Accept: authReq.headers.get('Accept')
-    });
-    console.log('Request URL:', authReq.url);
-
-    return next.handle(authReq).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('HTTP Error:', error); // Debug log
-        console.error('Error status:', error.status);
-        console.error('Error message:', error.message);
-        if (error.status === 401) {
-          console.log('401 error detected, logging out');
-          this.authService.logout();
-          this.router.navigate(['/auth/login']);
-        }
-        return throwError(() => error);
-      }),
-      finalize(() => {
-        console.log('Request completed'); // Debug log
-      })
-    );
+  // Skip auth header for auth endpoints
+  if (isAuthEndpoint(request.url)) {
+    console.log('Skipping auth header for auth endpoint:', request.url);
+    return next(request);
   }
 
-  private isAuthEndpoint(url: string): boolean {
-    const isAuth = url.includes(`${environment.apiUrl}/users/login`) || 
-                  url.includes(`${environment.apiUrl}/users/register`);
-    console.log('Is auth endpoint:', isAuth, 'for URL:', url);
-    return isAuth;
+  const token = localStorage.getItem('token');
+  console.log('=== Auth Interceptor Debug ===');
+  console.log('Token from localStorage:', token);
+  console.log('Original request headers:', request.headers.keys());
+  console.log('Original request URL:', request.url);
+
+  if (!token) {
+    console.log('No token found, redirecting to login');
+    router.navigate(['/auth/login']);
+    return throwError(() => new Error('No authentication token'));
   }
+
+  // Clone request with auth header
+  const authReq = request.clone({
+    headers: request.headers.set('Authorization', `Bearer ${token}`),
+    withCredentials: true
+  });
+  
+  // Debug logs
+  console.log('=== Modified Request Details ===');
+  console.log('Modified request headers:', {
+    Authorization: authReq.headers.get('Authorization'),
+    'Content-Type': authReq.headers.get('Content-Type'),
+    Accept: authReq.headers.get('Accept')
+  });
+  console.log('Modified request URL:', authReq.url);
+  console.log('withCredentials:', authReq.withCredentials);
+
+  return next(authReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('=== Request Error ===');
+      console.error('Error status:', error.status);
+      console.error('Error message:', error.message);
+      console.error('Full error:', error);
+      if (error.status === 401) {
+        console.log('401 error detected, logging out');
+        authService.logout();
+        router.navigate(['/auth/login']);
+      }
+      return throwError(() => error);
+    }),
+    finalize(() => {
+      console.log('Request completed');
+    })
+  );
+};
+
+function isAuthEndpoint(url: string): boolean {
+  const isAuth = url.includes(`${environment.apiUrl}/users/login`) || 
+                url.includes(`${environment.apiUrl}/users/register`);
+  console.log('Is auth endpoint check:', { url, isAuth });
+  return isAuth;
 } 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { BoardService } from '../../../core/services/board.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-board-create',
@@ -123,31 +124,41 @@ export class BoardCreateComponent {
   error: string | null = null;
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private boardService: BoardService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
-    this.boardForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
+    this.boardForm = this.formBuilder.group({
+      title: ['', Validators.required],
       description: ['']
     });
   }
 
   onSubmit() {
-    if (this.boardForm.valid) {
-      this.isLoading = true;
-      this.error = null;
+    if (this.boardForm.invalid || this.isLoading) return;
 
-      this.boardService.createBoard(this.boardForm.value).subscribe({
-        next: (board) => {
-          this.router.navigate(['/boards', board.id]);
-        },
-        error: (err) => {
-          this.error = err.error.message || 'Failed to create board';
-          this.isLoading = false;
-        }
-      });
-    }
+    // Debug authentication state
+    console.log('Auth check:', {
+      isAuthenticated: this.authService.isAuthenticated(),
+      token: this.authService.getToken(),
+      currentUser: this.authService.getCurrentUser()
+    });
+
+    this.isLoading = true;
+    this.error = null;
+
+    this.boardService.createBoard(this.boardForm.value).subscribe({
+      next: (board) => {
+        this.isLoading = false;
+        this.router.navigate(['/boards', board.id]);
+      },
+      error: (err) => {
+        console.error('Error creating board:', err);
+        this.error = err?.error?.message || 'Failed to create board';
+        this.isLoading = false;
+      }
+    });
   }
 
   goBack() {
